@@ -1,0 +1,58 @@
+[000] //***************************************************************
+[001] // CLASS: H1_43
+[002] //***************************************************************
+[003] 
+[004] import java.text.DecimalFormat;
+[005] import java.util.ArrayList;
+[006] import java.util.Scanner;
+[007] import java.io.BufferedReader;
+[008] import java.io.IOException;
+[009] import java.io.FileReader;
+[010] import java.io.FileWriter;
+[011] 
+[012] public class H1_43 {
+[013]     public static void main(String[] pArgs) {
+[014]         Scanner sc = new Scanner(System.in);
+[015]         BufferedReader reader;
+[016] 
+[017]         System.out.println("Enter filename: ");
+[018]         String filename = sc.nextLine();
+[019]         ArrayList<String> contents = new ArrayList<>();
+[020] 
+[021]         try {
+[022]             reader = new BufferedReader(new FileReader(filename));
+[023]             String line = reader.readLine();
+[024]             while (line != null) {
+[025]                 contents.add(line);
+[026]                 line = reader.readLine();
+[027]             }
+[028]             reader.close();
+[029] 
+[030]         } catch (IOException e) {
+[031]             System.out.println("Error: file not found.");
+[032]             e.printStackTrace();
+[033]         }
+[034] 
+[035]         int i = 0;
+[036]         try{
+[037]             FileWriter writer = new FileWriter(filename+".txt");
+[038]             for(String line:contents){
+[039]                 writer.write(lineNum(i) + " " + line);
+[040]             }
+[041]         } catch (IOException e) {
+[042]             System.out.println("An error has occurred.");
+[043]             e.printStackTrace();
+[044]         }
+[045] 
+[046] 
+[047] 
+[048] 
+[049]     }
+[050]     public static String lineNum(int i){
+[051]         DecimalFormat df = new DecimalFormat("000");
+[052]         String num = "[" + df.format(i) + "]";
+[053]         return num;
+[054]     }
+[055] 
+[056] 
+[057] }
