@@ -1,6 +1,13 @@
+/**
+* CSE240 Homework 5 Question 1*
+* Completion time : 2 Hours *
+* @AndronickMartusheff
+* @v03.24.2021
+*/
+
 // CSE240 
 // Be sure to add the standard header above.
-// Write the compiler used: Visual studio or gcc (SELECT ONE AND INDICATE)
+// Write the compiler used: Visual Studio
 
 // READ BEFORE YOU START:
 // You are given a partially completed program that creates a linked list of patient records.
@@ -143,15 +150,49 @@ void executeAction(char c)
 // Hint: One of the string library function can be useful to implement this function because the sorting needs to happen by student name which is a string.
 //       Use swapNodes() to swap the nodes in the sorting logic
 
-int addSort(char* studentName_input, char* major_input, char* schoolYear_input, unsigned int IDNumber_input) // 20 points
-{
+int addSort(char* studentName_input, char* major_input, char* schoolYear_input, unsigned int IDNumber_input) {// 20 points
+
 	struct studentRecord* tempList = list;	// work on a copy of 'list'
+	struct studentRecord* prevNode = NULL; // student node previous to student
+
 	// enter code here
+	while(tempList != NULL) { // until tempList points to NULL (no node)...
+		if(strcmp(tempList->studentName, studentName_input) == 0) //if cur. nodes "studentName" value is == to inputted name then..
+			return 0; // return 0 to main call (indicating that student is already in the list)
+		else if(strcmp(tempList->studentName, studentName_input) > 0) // else if diff between strings > 0, student is to be inserted before
+			break; 
+		prevNode = tempList; // positions one node back
+		tempList = tempList->next; // temp list is set to the next node in temp list 
+	}
 
+	// creating new student record with struct and storing it to node
+	struct studentRecord* node = (struct studentRecord*)malloc(sizeof(struct studentRecord)); //allocates memory
+	strcpy(node->studentName,studentName_input); // sets name of current student in node
+	strcpy(node->major, major_input); // sets major
 
-	return 0;	// edit this line as needed
+	if(strcmp(schoolYear_input, "freshman") == 0) // converts string to value to fit assignment (school year)
+		node->schoolYear = freshman;
+	else if(strcmp(schoolYear_input, "sophomore") == 0)
+		node->schoolYear = sophomore;
+	else if(strcmp(schoolYear_input, "junior") == 0)
+		node->schoolYear = junior;
+	else
+		node->schoolYear = senior;
+
+	node->IDNumber = IDNumber_input; // id number is set to user inputted id number for student
+
+	node->next = NULL; // sets curr node next to null to indicate an end point
+
+	if(prevNode == NULL) { // if the previous node is null, put student is first node position
+		node->next = list; // set the rest of list to come after node
+		list = node; // where the new list begins with node
+	} else {
+		node->next = tempList; // or, set the next node to the tempList
+		prevNode->next = node; // and assign the prev node next to the current node
+	}
+
+	return 1;	// return 1 to indicate student has been added to list
 }
-
 // Q2 : displayList (10 points)
 // This function displays the linked list of students, with all details (struct elements). 
 // Parse through the linked list and print the student details one after the other. See expected output screenshots in homework question file.
@@ -159,7 +200,30 @@ int addSort(char* studentName_input, char* major_input, char* schoolYear_input, 
 void displayList()
 {
 	struct studentRecord* tempList = list;				// work on a copy of 'list'
+
+	if(tempList == NULL) //if temp list has no value assigned (and only consists of a NULL value)
+		printf("\nThe list is Empty.\n"); // tell the user that the list is empty.
 	// enter code here
+
+	while(tempList != NULL) { // while tempList != NULL (while the current node has data)
+		printf("\nStudent Name: %s",tempList->studentName); //similar to previous HW, print name
+		printf("\nStudent Major: %s\n",tempList->major); // major
+
+		if(tempList->schoolYear == freshman) // convert struct assignment to string
+			printf("School Year: Freshman");
+		else if(tempList->schoolYear == sophomore)
+			printf("School Year: Sophomore");
+		else if(tempList->schoolYear == junior)
+			printf("School Year: Junior");
+		else if(tempList->schoolYear == senior)
+			printf("School Year: Senior");
+		else
+			printf("Invalid school year was entered."); // if the case where an invalid school year is entered, inform the user
+		printf("\nID Number : %d\n",tempList->IDNumber);
+
+		tempList = tempList->next; // while (curr) is the loop, he we iterate through tempList of nodes by setting curr node to next node
+	}
+
 
 }
 
@@ -170,8 +234,14 @@ void displayList()
 // This function is called in main() to display number of students along with the user menu.
 int countNodes()
 {
+	struct studentRecord *tempList = list; // list to count from
+	int i = 0; // iterable
 
-	return 0;	// edit this line as needed
+	while(tempList != NULL) { // while tempList has "data"... (an empty list will close out and return i where i = 0)
+		i++; // increment i (update node count)
+		tempList = tempList->next; // continue to next node to check again
+	}
+	return i;	// return counted nodes
 }
 
 // Q4 : deleteNode (10 points)
@@ -184,9 +254,24 @@ int countNodes()
 int deleteNode(char* studentName_input)
 {	
 	struct studentRecord* tempList = list->next;				// work on a copy of 'list'
+	struct studentRecord* prevNode = NULL; 
+
+	while(tempList != NULL) { // while temp list has "data"
+		if(strcmp(tempList->studentName,studentName_input) == 0) { // if studentName_input has a match
+			if(prevNode == NULL) // if curr node is first node (because previous node contains no data)
+				list = list->next; 
+			else // if node isnt the first node
+				prevNode->next = tempList->next;
+				free(tempList); // delete node
+
+			return 1;
+		}
+		prevNode = tempList; // set previous node to tempList
+		tempList = tempList->next; //set tempList to next value for next check
+	}
 
 	
-	return 0;			// edit this line as needed
+	return 0;			// student is not in list
 }
 
 
@@ -198,7 +283,9 @@ int deleteNode(char* studentName_input)
 
 void swapNodes(struct studentRecord* node1, struct studentRecord* node2)
 {
-	
+	 struct studentRecord *temp = node1->next; // node swap method
+	 node1->next = node2->next; //node1s next pointer points to node2s next
+	 node2->next = temp; //node2s next points to temp
 }
 
 
