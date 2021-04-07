@@ -1,4 +1,11 @@
 
+/**
+* CSE240 Homework 6 Question 1*
+* Completion time : 2 Hours *
+* @AndronickMartusheff
+* @v03.28.2021
+*/
+
 #include <string>
 using namespace std;
 

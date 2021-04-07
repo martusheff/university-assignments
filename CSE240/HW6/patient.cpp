@@ -1,3 +1,10 @@
+
+/**
+* CSE240 Homework 6 Question 1*
+* Completion time : 2 Hours *
+* @AndronickMartusheff
+* @v03.28.2021
+*/
  
 #include "patient.h"
 #include <iostream>
@@ -13,7 +20,10 @@ using namespace std;
 // ID: 0
 Patient::Patient()
 {
-    
+    age = 19;
+    name = "abc";
+    DOByear = 2000;
+    ID = 0;
 }
 
 // Q2 (18 points)
@@ -28,32 +38,35 @@ Patient::Patient()
 // setName assigns 'name_input' to class data member 'name'
 void Patient::setName(string name_input)
 {
-   
+   name = name_input;
 }
 
 // setAge assigns age_input to class data member 'age'
 void Patient::setAge(int age_input)
 {
-    
+    age = age_input;
 }
 
 // setDOByear assigns 'DOByear_input' to class data member 'DOByear'
 void Patient::setDOByear(int DOByear_input)
 {
-        
+    DOByear = DOByear_input;
 }
 
 // setID assigns 'ID_input' to class data member 'ID'
 void Patient::setID(int ID_input)
 {
-	
+	ID = ID_input;
 }
 
 // displayPatients displays the name, age, year of birth and ID of the paatient
 // See expected output in question file.
 void Patient::displayPatient()
 {
-	
+	cout<<"Name: " << name << endl;
+	cout<<"Age: " << age << endl;
+	cout<<"Year of Birth: " << DOByear << endl;
+	cout<<"ID: " << ID << endl;
 	
 }
 
@@ -69,19 +82,19 @@ string Patient::getName()
 int Patient::getAge()
 {
 	// enter code here
-
+	return age;
 }
 
 // getDOByear returns the class data member 'DOByear'.
 int Patient::getDOByear()
 {
 	// enter code here
-	
+	return DOByear;
 }
 
 // getID returns the class data member 'ID'.
 int Patient::getID()
 {	
     // enter code here
-
+	return ID;
 }

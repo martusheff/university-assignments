@@ -1,4 +1,11 @@
 
+/**
+* CSE240 Homework 6 Question 1*
+* Completion time : 2 Hours *
+* @AndronickMartusheff
+* @v03.28.2021
+*/
+
 // CSE240 
 // Be sure to add the standard header above.
 // Write the compiler used: Visual studio or g++ (SELECT ONE AND INDICATE)
@@ -123,8 +130,18 @@ void executeAction(char c)
 // Assume user enters age in 0.0 - any positive integer range.
 int addPatient(string name_input, int age_input, int DOByear_input, int ID_input)
 {
+	if(currentCount < MAX_PATIENTS) {
+		s[currentCount].setName(name_input);
+		s[currentCount].setAge(age_input);
+		s[currentCount].setDOByear(DOByear_input);
+		s[currentCount].setID(ID_input);
+		s[currentCount].displayPatient();
+		currentCount += 1;
 
-	return 1;	// edit this line if needed
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 // Q4 displayPatients (5 points)
@@ -134,7 +151,9 @@ int addPatient(string name_input, int age_input, int DOByear_input, int ID_input
 // Patient::displayPatient() displays details of one Patient object, while displayPatients() should display all patients
 void displayPatients()
 {
-
+	for(int i = 0; i < currentCount; i++){
+		s[i].displayPatient();
+	}
 }
 
 // Q5 sort (10 points)
@@ -145,7 +164,19 @@ void sort()
 {
 	Patient temp;
 	// enter code here
+	int i, j, k = 1, numLength = currentCount;
+	for(i = 1; (i<= numLength) && k; i++) {
+		k = 0;
+		for(j = 0; j < (numLength - 1); j++){
+			if(s[j+1].getAge() > s[j].getAge()) {
+				temp = s[j];
+				s[j] = s[j+1];
+				s[j+1] = temp;
+				k = 1;
 
+			}
+	}
+}
 
 }
 
