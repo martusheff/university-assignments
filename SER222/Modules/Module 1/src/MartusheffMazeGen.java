@@ -124,79 +124,70 @@ public class MartusheffMazeGen {
         return true;
     }
 
-    private static char[][] drawWalls(char[][] level, int startX, int startY, int endX, int endY) {
-
-        int vertWall = randBetween(endX, startX);
-        int horzWall = randBetween(endY, startY);
-
-        // Vertical Wall
-
-        for (int i = startY; i <= endY; i++)
-                    level[i][vertWall] = ICON_WALL;
-
-        // Horizontal Wall
-        for (int i = startX; i <= endX; i++)
-            level[horzWall][i] = ICON_WALL;
-
-        // Find Intersection
-        int intersectX = 0;
-        int intersectY = 0;
-        for (int i = startX; i <= endX; i++){
-            for (int j = startY; j <= endY; j++)
-                if (i == vertWall && j == horzWall) {
-
-                    level[j][i] = ICON_WALL;
-                    intersectX = i;
-                    intersectY = j;
-                }
-        }
-
-        if( checkBound(intersectX, startX) > 0) {
-            int leftDoor = randBetween(intersectX, startX);
-            level[horzWall][leftDoor] = ICON_BLANK;
-        }
-
-        if (checkBound(endX, intersectX) > 0) {
-            int rightDoor = randBetween(endX, intersectX);
-            level[horzWall][rightDoor] = ICON_BLANK;
-        }
-
-        if (checkBound(intersectY, startY) > 0) {
-            int topDoor = randBetween(intersectY, startY);
-            level[topDoor][vertWall] = ICON_BLANK;
-        }
-        if ( checkBound(endY, intersectY) > 0) {
-            int bottomDoor = randBetween(endY, intersectY);
-            level[bottomDoor][vertWall] = ICON_BLANK;
-        }
-
-        // Top Left
-        if(checkRoom(startX, startY, intersectX, intersectY))
-            makeMazeRecursive(level,startX, startY, intersectX, intersectY);
-
-
-        // Top Right
-        if(checkRoom(intersectX,startY,endX,intersectY))
-            makeMazeRecursive(level, intersectX, startY, endX, intersectY);
-
-        // Bottom Left
-        if(checkRoom(startX,intersectY,intersectX,endY))
-            makeMazeRecursive(level, startX, intersectY, intersectX, endY);
-
-        // Bottom Right
-        if(checkRoom(intersectX,intersectY,endX,endY))
-            makeMazeRecursive(level, intersectX, intersectY, endX, endY);
-
-        return level;
-
-
-    }
-
     //TODO: complete method.
     private static void makeMazeRecursive(char[][] level, int startX, int startY, int endX, int endY) {
 
-        if ((((endX-startX) > 1)) && (((endY - startY) > 1))) {
-            drawWalls(level, startX, startY, endX, endY);
+        if ((((endX-startX) > 3)) && (((endY - startY) > 3))) {
+            int vertWall = randBetween(endX, startX);
+            int horzWall = randBetween(endY, startY);
+
+            // Vertical Wall
+
+            for (int i = startY; i <= endY; i++)
+                level[i][vertWall] = ICON_WALL;
+
+            // Horizontal Wall
+            for (int i = startX; i <= endX; i++)
+                level[horzWall][i] = ICON_WALL;
+
+            // Find Intersection
+            int intersectX = 0;
+            int intersectY = 0;
+            for (int i = startX; i <= endX; i++){
+                for (int j = startY; j <= endY; j++)
+                    if (i == vertWall && j == horzWall) {
+
+                        level[j][i] = ICON_WALL;
+                        intersectX = i;
+                        intersectY = j;
+                    }
+            }
+
+            if( checkBound(intersectX, startX) > 0) {
+                int leftDoor = randBetween(intersectX, startX);
+                level[horzWall][leftDoor] = ICON_BLANK;
+            }
+
+            if (checkBound(endX, intersectX) > 0) {
+                int rightDoor = randBetween(endX, intersectX);
+                level[horzWall][rightDoor] = ICON_BLANK;
+            }
+
+            if (checkBound(intersectY, startY) > 0) {
+                int topDoor = randBetween(intersectY, startY);
+                level[topDoor][vertWall] = ICON_BLANK;
+            }
+            if ( checkBound(endY, intersectY) > 0) {
+                int bottomDoor = randBetween(endY, intersectY);
+                level[bottomDoor][vertWall] = ICON_BLANK;
+            }
+
+            // Top Left
+            if(checkRoom(startX, startY, intersectX, intersectY))
+                makeMazeRecursive(level,startX, startY, intersectX, intersectY);
+
+
+            // Top Right
+            if(checkRoom(intersectX,startY,endX,intersectY))
+                makeMazeRecursive(level, intersectX, startY, endX, intersectY);
+
+            // Bottom Left
+            if(checkRoom(startX,intersectY,intersectX,endY))
+                makeMazeRecursive(level, startX, intersectY, intersectX, endY);
+
+            // Bottom Right
+            if(checkRoom(intersectX,intersectY,endX,endY))
+                makeMazeRecursive(level, intersectX, intersectY, endX, endY);
         }
 
     }
