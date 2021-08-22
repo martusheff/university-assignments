@@ -108,21 +108,31 @@ public class MartusheffMazeGen {
 
     private static int randBetween(int high, int low) {
         Random position = new Random();
-
-        return (position.nextInt(high - low) + low);
+        int r = (position.nextInt(high - low - 1) + low + 1);
+        return r;
     }
 
+    private static int checkBound(int high, int low) {
+        return (high - low - 1);
+    }
+
+    private static boolean checkRoom(int startX, int startY, int endX, int endY) {
+        if((endX - startX) < 6)
+            return false;
+        if((endY - startY) < 6)
+            return false;
+        return true;
+    }
 
     private static char[][] drawWalls(char[][] level, int startX, int startY, int endX, int endY) {
-
 
         int vertWall = randBetween(endX, startX);
         int horzWall = randBetween(endY, startY);
 
-
         // Vertical Wall
+
         for (int i = startY; i <= endY; i++)
-            level[i][vertWall] = ICON_WALL;
+                    level[i][vertWall] = ICON_WALL;
 
         // Horizontal Wall
         for (int i = startX; i <= endX; i++)
@@ -135,60 +145,47 @@ public class MartusheffMazeGen {
             for (int j = startY; j <= endY; j++)
                 if (i == vertWall && j == horzWall) {
 
-                    level[j][i] = 'X';
+                    level[j][i] = ICON_WALL;
                     intersectX = i;
                     intersectY = j;
                 }
         }
 
+        if( checkBound(intersectX, startX) > 0) {
+            int leftDoor = randBetween(intersectX, startX);
+            level[horzWall][leftDoor] = ICON_BLANK;
+        }
 
+        if (checkBound(endX, intersectX) > 0) {
+            int rightDoor = randBetween(endX, intersectX);
+            level[horzWall][rightDoor] = ICON_BLANK;
+        }
 
-
-
-        int leftDoor = randBetween(intersectX, startX);
-        int rightDoor = randBetween(endX, intersectX);
-        int topDoor = randBetween(intersectY, startY);
-        int bottomDoor = randBetween(endY, intersectY);
-
-
-
-
-
-        level[horzWall][leftDoor] = ICON_BLANK;
-        level[horzWall][rightDoor] = ICON_BLANK;
-        level[topDoor][vertWall] = ICON_BLANK;
-        level[bottomDoor][vertWall] = ICON_BLANK;
+        if (checkBound(intersectY, startY) > 0) {
+            int topDoor = randBetween(intersectY, startY);
+            level[topDoor][vertWall] = ICON_BLANK;
+        }
+        if ( checkBound(endY, intersectY) > 0) {
+            int bottomDoor = randBetween(endY, intersectY);
+            level[bottomDoor][vertWall] = ICON_BLANK;
+        }
 
         // Top Left
-        //makeMazeRecursive(level,startX, startY, intersectX, intersectY);
+        if(checkRoom(startX, startY, intersectX, intersectY))
+            makeMazeRecursive(level,startX, startY, intersectX, intersectY);
 
 
         // Top Right
-        //makeMazeRecursive(level, intersectX, startY, endX, intersectY);
+        if(checkRoom(intersectX,startY,endX,intersectY))
+            makeMazeRecursive(level, intersectX, startY, endX, intersectY);
 
         // Bottom Left
-        //makeMazeRecursive(level, startX, intersectY, intersectX, endY);
+        if(checkRoom(startX,intersectY,intersectX,endY))
+            makeMazeRecursive(level, startX, intersectY, intersectX, endY);
 
         // Bottom Right
-        makeMazeRecursive(level, intersectX, intersectY, endX, endY);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if(checkRoom(intersectX,intersectY,endX,endY))
+            makeMazeRecursive(level, intersectX, intersectY, endX, endY);
 
         return level;
 
@@ -197,68 +194,13 @@ public class MartusheffMazeGen {
 
     //TODO: complete method.
     private static void makeMazeRecursive(char[][] level, int startX, int startY, int endX, int endY) {
-        /*
-        for (int x = 0; x < LEVEL_WIDTH; x++)
-            level[0][x] = ICON_WALL;
 
-         */
         if ((((endX-startX) > 1)) && (((endY - startY) > 1))) {
             drawWalls(level, startX, startY, endX, endY);
         }
-        /*
-        if ((endX > 1 && endY > 1)) {
-            if ((endX - startX >= 4 && endY - startY >= 4)) {
-                Random number = new Random();
-                int row = startY + number.nextInt(endY - startY);
-                int col = startX + number.nextInt(endX - startX);
 
-                for (int i = startX; i < endX; i++)
-                    level[row][i] = ICON_WALL;
-                for (int i = startY; i < endY; i++)
-                    level[i][col] = ICON_WALL;
+    }
 
-                if (col == 1)
-                    level[row][col + number.nextInt(endX - col + 1)] = ICON_BLANK;
-                if (col != 1) {
-                    level[row][col + number.nextInt(endX - col + 1)] = ICON_BLANK;
-                    level[row][startX + number.nextInt(col - startX + 1)] = ICON_BLANK;
-                }
-
-                if (row == 1)
-                    level[row - 1 + number.nextInt(endY - row + 1)][col] = ICON_BLANK;
-                if (row != 1) {
-                    level[startY + number.nextInt(row - startY + 1)][col] = ICON_BLANK;
-                    level[row + number.nextInt(endY - row + 1)][col] = ICON_BLANK;
-                }
-                makeMazeRecursive(level, 1, 1, (col - 1), (row - 1));
-                makeMazeRecursive(level, col + 1, 1, endX, row - 1);
-
-            }
-
-         */
-
-
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     /**
      * Displays a level in the console.
      * 
