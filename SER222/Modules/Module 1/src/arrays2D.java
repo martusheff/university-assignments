@@ -15,5 +15,7 @@ public class arrays2D {
             }
             System.out.println();
         }
+
+        System.out.println(lotteryCard[1][2]);
     }
 }

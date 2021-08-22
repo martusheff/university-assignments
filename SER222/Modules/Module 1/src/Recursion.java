@@ -20,10 +20,23 @@ public class Recursion {
         return fibonnaci(n-1) + fibonnaci(n - 2);
     }
 
+    static int decrement(int n, int counter) {
+
+        if (n == 337) {
+            System.out.println("Got to number " + n + " after " + counter + " iterations.");
+            return 1;
+        }
+
+        return decrement(n - 1, counter + 1);
+    }
+
 
     public static void main(String[] args) {
         System.out.println(factorial(10));
         System.out.println(sumToZero(3));
         System.out.println(fibonnaci(10));
+
+        decrement(828, 0);
+
     }
 }
