@@ -1,15 +1,13 @@
 /**
- * (basic description of the program or class)
+ * SER222: Deliverable 1:
+ * Creating a recursively called maze generation algorithm.
  * 
- * Completion time: (estimation of hours spent on this program)
+ * Completion time: ~10 hours
  *
- * @author (your name), Acuna
- * @version (a version number or a date)
+ * @author Andronick Martusheff
+ * @version v08.23.2021
  */
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import java.util.*;
 
 
 public class MartusheffMazeGen {
@@ -108,37 +106,49 @@ public class MartusheffMazeGen {
 
     private static int randBetween(int high, int low) {
         Random position = new Random();
-        int r = (position.nextInt(high - low - 1) + low + 1);
-        return r;
+        return (position.nextInt(high - low - 1) + low + 1);
     }
 
     private static int checkBound(int high, int low) {
         return (high - low - 1);
     }
 
+    // Check Potential Room Dimensions
     private static boolean checkRoom(int startX, int startY, int endX, int endY) {
-        if((endX - startX) < 6)
+        if((endX - startX) < 3)
             return false;
-        if((endY - startY) < 6)
+        if((endY - startY) < 3)
             return false;
         return true;
     }
 
-    //TODO: complete method.
-    private static void makeMazeRecursive(char[][] level, int startX, int startY, int endX, int endY) {
+    // Randomizer Function
+    private static int[] randomize( int selection[], int n) {
+        Random rand = new Random();
+        for(int i = n-1; i > 0; i --) {
+            int j = rand.nextInt(i);
+            int temp = selection[i];
+            selection[i] = selection[j];
+            selection[j] = temp;
+        }
+        return selection;
+    }
 
-        if ((((endX-startX) > 3)) && (((endY - startY) > 3))) {
+    private static <i> void makeMazeRecursive(char[][] level, int startX, int startY, int endX, int endY) {
+
+        if ((((endX-startX) > 2)) && (((endY - startY) > 2))) {
             int vertWall = randBetween(endX, startX);
             int horzWall = randBetween(endY, startY);
 
-            // Vertical Wall
-
+            // Vertical Wall w/ Doubling Check
             for (int i = startY; i <= endY; i++)
-                level[i][vertWall] = ICON_WALL;
+                if(level[i][vertWall - 1] != ICON_WALL && level[i][vertWall + 1] != ICON_WALL)
+                    level[i][vertWall] = ICON_WALL;
 
-            // Horizontal Wall
+            // Horizontal Wall w/ Doubling Check
             for (int i = startX; i <= endX; i++)
-                level[horzWall][i] = ICON_WALL;
+                if(level[horzWall - 1][i] != ICON_WALL && level[horzWall + 1][i] != ICON_WALL)
+                    level[horzWall][i] = ICON_WALL;
 
             // Find Intersection
             int intersectX = 0;
@@ -146,36 +156,46 @@ public class MartusheffMazeGen {
             for (int i = startX; i <= endX; i++){
                 for (int j = startY; j <= endY; j++)
                     if (i == vertWall && j == horzWall) {
-
                         level[j][i] = ICON_WALL;
                         intersectX = i;
                         intersectY = j;
                     }
             }
 
-            if( checkBound(intersectX, startX) > 0) {
-                int leftDoor = randBetween(intersectX, startX);
-                level[horzWall][leftDoor] = ICON_BLANK;
+            // Random selection helper for randomizing door selection.
+            int[] selection = randomize(new int[]{1, 2, 3, 4}, 4);
+
+            for(int i = 3; i >0; i--) {
+
+                // Left Door Condition = 1
+                if( (checkBound(intersectX, startX) > 0) && selection[i] == 1 ) {
+                    int leftDoor = randBetween(intersectX, startX);
+                    level[horzWall][leftDoor] = ICON_BLANK;
+                }
+
+                // Right Door Condition = 2
+                if( (checkBound(endX, intersectX) > 0) && selection[i] == 2) {
+                    int rightDoor = randBetween(endX, intersectX);
+                    level[horzWall][rightDoor] = ICON_BLANK;
+                }
+
+                // Top Door Condition = 3
+                if ( (checkBound(intersectY, startY) > 0) && selection[i] == 3) {
+                    int topDoor = randBetween(intersectY, startY);
+                    level[topDoor][vertWall] = ICON_BLANK;
+                }
+
+                // Bottom Door Condition = 4
+                if ( (checkBound(endY, intersectY) > 0) && selection[i] == 4) {
+                    int bottomDoor = randBetween(endY, intersectY);
+                    level[bottomDoor][vertWall] = ICON_BLANK;
+                }
             }
 
-            if (checkBound(endX, intersectX) > 0) {
-                int rightDoor = randBetween(endX, intersectX);
-                level[horzWall][rightDoor] = ICON_BLANK;
-            }
-
-            if (checkBound(intersectY, startY) > 0) {
-                int topDoor = randBetween(intersectY, startY);
-                level[topDoor][vertWall] = ICON_BLANK;
-            }
-            if ( checkBound(endY, intersectY) > 0) {
-                int bottomDoor = randBetween(endY, intersectY);
-                level[bottomDoor][vertWall] = ICON_BLANK;
-            }
-
+            // Recursive Calls w/ Area Checking
             // Top Left
             if(checkRoom(startX, startY, intersectX, intersectY))
                 makeMazeRecursive(level,startX, startY, intersectX, intersectY);
-
 
             // Top Right
             if(checkRoom(intersectX,startY,endX,intersectY))
@@ -188,8 +208,9 @@ public class MartusheffMazeGen {
             // Bottom Right
             if(checkRoom(intersectX,intersectY,endX,endY))
                 makeMazeRecursive(level, intersectX, intersectY, endX, endY);
-        }
 
+
+        }
     }
 
     /**
