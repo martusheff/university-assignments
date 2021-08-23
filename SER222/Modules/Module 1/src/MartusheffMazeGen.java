@@ -113,7 +113,7 @@ public class MartusheffMazeGen {
         return (high - low - 1);
     }
 
-    // Check Potential Room Dimensions
+    // Check Potential Room Dimensions (Serving a potential base-case.)
     private static boolean checkRoom(int startX, int startY, int endX, int endY) {
         if((endX - startX) < 3)
             return false;
@@ -136,9 +136,15 @@ public class MartusheffMazeGen {
 
     private static <i> void makeMazeRecursive(char[][] level, int startX, int startY, int endX, int endY) {
 
+        // Bound checking (also serves as a potential 'basecase' safeguard.)
         if ((((endX-startX) > 2)) && (((endY - startY) > 2))) {
+
+            /** Randomized wall positioning point.
+             *  -> end/start parameters are updated on each recursive call ensuring appropriate wall spans.
+            */
             int vertWall = randBetween(endX, startX);
             int horzWall = randBetween(endY, startY);
+
 
             // Vertical Wall w/ Doubling Check
             for (int i = startY; i <= endY; i++)
@@ -162,7 +168,12 @@ public class MartusheffMazeGen {
                     }
             }
 
-            // Random selection helper for randomizing door selection.
+            /** -> Each door (top, left, bottom, right) is assigned a value from 1 to 4.
+             *  -> A list from 1 to 4 {1,2,3,4} is generated and shuffled with the 'randomize' method.
+             *  -> 3 numbers are selected from the shuffled 'selection' list.
+             *  -> 1 door will always be left out.
+             *  -> The shuffled 'selection' updates for every recursive call. (Ensuring random doors are created)
+             */
             int[] selection = randomize(new int[]{1, 2, 3, 4}, 4);
 
             for(int i = 3; i >0; i--) {
@@ -192,7 +203,7 @@ public class MartusheffMazeGen {
                 }
             }
 
-            // Recursive Calls w/ Area Checking
+            // 4 Recursive Calls w/ Area Checking Parameters
             // Top Left
             if(checkRoom(startX, startY, intersectX, intersectY))
                 makeMazeRecursive(level,startX, startY, intersectX, intersectY);
