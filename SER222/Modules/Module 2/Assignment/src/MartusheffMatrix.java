@@ -6,9 +6,11 @@
  * @version (version)
  */
 public class MartusheffMatrix implements Matrix {
-    
+
     //TODO: implement interface.
-    
+    public int getElement() {
+
+    }
     
     /**
      * Entry point for matrix testing.
