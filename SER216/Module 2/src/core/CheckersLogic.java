@@ -1,3 +1,5 @@
+package core;
+
 interface piece {
 
 }
@@ -25,7 +27,7 @@ public class CheckersLogic {
     }
 
 
-    static class OPiece extends Piece {
+    public static class OPiece extends Piece {
         private final char name = 'o';
         private int positionY, positionX;
 
@@ -76,11 +78,11 @@ public class CheckersLogic {
     public static class Board {
         private Piece[][] board = new Piece[8][8];
 
-        private Board() {
+        public Board() {
             getNewBoard();
         }
 
-        private void movePiece(int startX, int startY, int endX, int endY, OPiece o){
+        public void movePiece(int startX, int startY, int endX, int endY, OPiece o){
             board[startY][startX] = new Piece();
             board[endY][endX] = o;
         }
@@ -109,7 +111,7 @@ public class CheckersLogic {
             }
         }
 
-        private void displayBoard() {
+        public void displayBoard() {
 
             int vertPosCounter = 0;
             for (int i = 0; i < board.length; i++) {
@@ -126,29 +128,13 @@ public class CheckersLogic {
             System.out.println("    a   b   c   d   e   f   g   h");
         }
 
-        private Piece getPiece(int y, int x) {
+        public Piece getPiece(int y, int x) {
             return board[y][x];
         }
 
 
     }
 
-
-    public static void main(String[] args) {
-        Board board = new Board();
-        board.displayBoard();
-
-        OPiece o = (OPiece) board.getPiece(2,1);
-
-        board.movePiece(1,2,2,3, o);
-
-        board.displayBoard();
-
-
-
-
-
-    }
 
 
 
