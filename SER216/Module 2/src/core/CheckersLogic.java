@@ -1,16 +1,21 @@
 package core;
 
+import org.w3c.dom.ls.LSOutput;
+
 interface piece {
 
 }
 
 public class CheckersLogic {
+
+
     Board testBoard = new Board();
 
 
 
     static class Piece {
         boolean isFilled = false;
+
 
         public Piece(boolean isFilled) {
             this.isFilled = isFilled;
@@ -30,6 +35,8 @@ public class CheckersLogic {
     public static class OPiece extends Piece {
         private final char name = 'o';
         private int positionY, positionX;
+        private int[] move1, move2;
+        int[][] possibleMoves;
 
 
 
@@ -38,6 +45,15 @@ public class CheckersLogic {
             this.isFilled = isFilled;
             this.positionY = positionY;
             this.positionX = positionX;
+            this.move1 = new int[]{positionX, positionY + 1};
+            this.move2 = new int[]{positionX, positionY - 1};
+
+        }
+
+
+
+        public void getPossibleMoves() {
+            System.out.println(this.move1[0]+ "," + this.move1[1] + " | " + this.move2[0] + "," + this.move2[1]);
         }
 
         public void setPosition(int positionY, int positionX) {
@@ -51,17 +67,24 @@ public class CheckersLogic {
 
     }
 
-    static class XPiece extends Piece {
-        private final char name = 'o';
+    public static class XPiece extends Piece {
+        private final char name = 'x';
         private int positionY, positionX;
+        private int[] move1, move2;
 
 
 
         private XPiece(int positionY, int positionX, boolean isFilled) {
-            super();
             this.isFilled = isFilled;
             this.positionY = positionY;
             this.positionX = positionX;
+            this.move1 = new int[]{positionY - 1, positionX-1};
+            this.move2 = new int[]{positionY - 1, positionX+1};
+
+        }
+
+        public void getPossibleMoves() {
+            System.out.println(this.move1[0]+ "," + this.move1[1] + " | " + this.move2[0] + "," + this.move2[1]);
         }
 
         public void setPosition(int positionY, int positionX) {
@@ -82,9 +105,14 @@ public class CheckersLogic {
             getNewBoard();
         }
 
-        public void movePiece(int startX, int startY, int endX, int endY, OPiece o){
-            board[startY][startX] = new Piece();
-            board[endY][endX] = o;
+        public void moveOPiece(int startX, int startY, int endX, int endY, OPiece o){
+            board[startX][startY] = new Piece();
+            board[endX][endY] = o;
+        }
+
+        public void moveXPiece(int startX, int startY, int endX, int endY, XPiece x){
+            board[startX][startY] = new Piece();
+            board[endX][endY] = x;
         }
 
         private void getNewBoard() {
@@ -128,9 +156,37 @@ public class CheckersLogic {
             System.out.println("    a   b   c   d   e   f   g   h");
         }
 
-        public Piece getPiece(int y, int x) {
-            return board[y][x];
+        public String convertToUIFriendly(String coordinates) {
+            String result = "";
+            char[] vert = {'8','7','6','5','4','3','2','1'};
+            char[] horz = {'a','b','c','d','e','f','g','h'};
+
+            for(int i =0; i < 8; i ++) {
+                char y = coordinates.charAt(1);
+                if(y == vert[i]) {
+                    result += i;
+                }
+            }
+            for(int i =0; i < 8; i ++) {
+                char x = coordinates.charAt(0);
+                if(x == horz[i]) {
+                    result += i;
+                }
+            }
+
+
+            System.out.println(result.charAt(0) + "," + result.charAt(1));
+            return result;
+
         }
+
+        public Piece getPiece(int y, int x) {
+            Piece p = board[y][x];
+            return p;
+        }
+
+
+
 
 
     }
