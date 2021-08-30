@@ -18,6 +18,7 @@ public class FixedCapacityStringStack {
     }
 
     public String pop() {
+
         return data[--n];
     }
 
@@ -34,19 +35,26 @@ public class FixedCapacityStringStack {
         while (inUse) {
             Scanner sc = new Scanner(System.in);
             String response = sc.nextLine();
-            System.out.println(response);
-            if(response == "q") {
+
+
+            if(response.equals("q") ){
                 inUse = false;
+                return;
             }
-            if(response == "Pop") {
-                System.out.println("Your popped string is: " + stack.pop() + ".");
+
+            if(response.equals("Pop")) {
+                System.out.println("Your popped string is: '" + stack.pop() + "'.");
             } else {
                 String valToPush = handleInput(response);
                 stack.push(valToPush);
                 System.out.println("Successfully pushed '" + valToPush + "' to stack." );
             }
+            response = "";
+
+
 
         }
+
     }
 
     public static String handleInput(String input) {
@@ -62,7 +70,7 @@ public class FixedCapacityStringStack {
 
 
         uiStackInteractor();
-
+        System.out.println("All done.");
 
     }
 }
