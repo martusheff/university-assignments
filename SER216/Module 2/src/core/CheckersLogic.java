@@ -1,7 +1,5 @@
 package core;
 
-import org.w3c.dom.ls.LSOutput;
-
 interface piece {
 
 }
@@ -105,7 +103,8 @@ public class CheckersLogic {
             getNewBoard();
         }
 
-        public void moveOPiece(int startX, int startY, int endX, int endY, OPiece o){
+        public void moveOPiece(int startX, int startY, int endX, int endY){
+            OPiece o = (OPiece) board[startX][startY];
             board[startX][startY] = new Piece();
             board[endX][endY] = o;
         }
@@ -180,9 +179,14 @@ public class CheckersLogic {
 
         }
 
-        public Piece getPiece(int y, int x) {
-            Piece p = board[y][x];
-            return p;
+        public OPiece getOPiece(int y, int x) {
+            OPiece o = (OPiece) board[y][x];
+            return o;
+        }
+
+        public XPiece getXPiece(int y, int x) {
+            XPiece xP = (XPiece) board[y][x];
+            return xP;
         }
 
 

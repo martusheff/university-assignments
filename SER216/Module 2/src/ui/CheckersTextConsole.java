@@ -34,10 +34,12 @@ public class CheckersTextConsole extends CheckersLogic {
                 String setCoordinates = board.convertToUIFriendly(parts[1]);
                 int endX = setCoordinates.charAt(0) - '0';
                 int endY = setCoordinates.charAt(1) - '0';
-                OPiece o = (OPiece) board.getPiece(startY,startX);
+                //OPiece o = board.getOPiece(startY,startX);
 
-                board.moveOPiece(startX,startY, endX, endY, o);
-                o.getPossibleMoves();
+
+
+                board.moveOPiece(startX,startY, endX, endY);
+                //o.getPossibleMoves();
 
                 board.displayBoard();
                 turnO = false;
@@ -61,12 +63,12 @@ public class CheckersTextConsole extends CheckersLogic {
                 int endX = setCoordinates.charAt(0) - '0';
                 int endY = setCoordinates.charAt(1) - '0';
 
-                XPiece x = (XPiece) board.getPiece(startX,startY);
+                XPiece x = board.getXPiece(startX,startY);
 
 
 
                 board.moveXPiece(startX,startY, endX, endY, x);
-                x.getPossibleMoves();
+                //x.getPossibleMoves();
 
                 board.displayBoard();
                 turnX = false;
