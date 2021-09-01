@@ -39,7 +39,7 @@ public class CheckersTextConsole extends CheckersLogic {
 
 
                 board.moveOPiece(startX,startY, endX, endY);
-                //o.getPossibleMoves();
+
 
                 board.displayBoard();
                 turnO = false;
@@ -63,11 +63,11 @@ public class CheckersTextConsole extends CheckersLogic {
                 int endX = setCoordinates.charAt(0) - '0';
                 int endY = setCoordinates.charAt(1) - '0';
 
-                XPiece x = board.getXPiece(startX,startY);
+                //XPiece x = board.getXPiece(startX,startY);
 
 
 
-                board.moveXPiece(startX,startY, endX, endY, x);
+                board.moveXPiece(startX,startY, endX, endY);
                 //x.getPossibleMoves();
 
                 board.displayBoard();

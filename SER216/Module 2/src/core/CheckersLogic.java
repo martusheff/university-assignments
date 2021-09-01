@@ -39,19 +39,42 @@ public class CheckersLogic {
 
 
         private OPiece(int positionY, int positionX, boolean isFilled) {
-            super();
             this.isFilled = isFilled;
             this.positionY = positionY;
             this.positionX = positionX;
-            this.move1 = new int[]{positionX, positionY + 1};
-            this.move2 = new int[]{positionX, positionY - 1};
+            this.move1 = new int[]{positionY + 1, positionX + 1};
+            this.move2 = new int[]{positionY + 1, positionX - 1};
 
         }
 
 
 
-        public void getPossibleMoves() {
-            System.out.println(this.move1[0]+ "," + this.move1[1] + " | " + this.move2[0] + "," + this.move2[1]);
+        public String getPossibleMoves(OPiece o) {
+
+            String possibleMoves = "";
+
+            if(o.move1[0] < 0 || o.move1[0] > 7)
+                o.move1 = null;
+
+            if(o.move1[1] < 0 || o.move1[1] > 7)
+                o.move1 = null;
+
+            if(o.move2[0] < 0 || o.move2[0] > 7)
+                o.move2 = null;
+
+            if(o.move2[1] < 0 || o.move2[1] > 7)
+                o.move2 = null;
+
+            if(o.move1 != null) {
+                possibleMoves += "" + o.move1[0] + "" + o.move1[1];
+            }
+
+            if(o.move2 != null) {
+                possibleMoves += "" + o.move2[0] + "" + o.move2[1];
+            }
+            System.out.println(possibleMoves);
+
+            return possibleMoves;
         }
 
         public void setPosition(int positionY, int positionX) {
@@ -81,9 +104,6 @@ public class CheckersLogic {
 
         }
 
-        public void getPossibleMoves() {
-            System.out.println(this.move1[0]+ "," + this.move1[1] + " | " + this.move2[0] + "," + this.move2[1]);
-        }
 
         public void setPosition(int positionY, int positionX) {
             this.positionY = positionY;
@@ -105,13 +125,41 @@ public class CheckersLogic {
 
         public void moveOPiece(int startX, int startY, int endX, int endY){
             OPiece o = (OPiece) board[startX][startY];
+            getPossibleOMoves(o);
+            if(movePossible(o, endX, endY) == true) {
+                System.out.println("Move possible!");
+            } else {
+                System.out.println("Move blocked.");
+            }
             board[startX][startY] = new Piece();
-            board[endX][endY] = o;
+            board[endX][endY] = new OPiece(endX, endY, true);
+
         }
 
-        public void moveXPiece(int startX, int startY, int endX, int endY, XPiece x){
+        public boolean movePossible(OPiece o , int endX, int endY) {
+            if(o.move1 == null && o.move2 == null) {
+                System.out.println("There are no possible moves for this piece.");
+                return false;
+            }
+            if(o.move1 != null) {
+                if (o.move1[0] == endX && o.move1[1] == endY) {
+                    return true;
+                }
+            }
+            if(o.move2 != null) {
+                if (o.move2[0] == endX && o.move2[1] == endY) {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
+        public void moveXPiece(int startX, int startY, int endX, int endY){
+            XPiece x = (XPiece) board[startX][startY];
+            getPossibleXMoves(x);
             board[startX][startY] = new Piece();
-            board[endX][endY] = x;
+            board[endX][endY] = new XPiece(endX, endY, true);
         }
 
         private void getNewBoard() {
@@ -138,6 +186,83 @@ public class CheckersLogic {
             }
         }
 
+        public String getPossibleOMoves(OPiece o) {
+
+            String possibleMoves = "";
+
+
+            if (o.move1[0] < 0 || o.move1[0] > 7 || o.move1[1] < 0 || o.move1[1] > 7) {
+                o.move1 = null;
+            }
+
+            if (o.move2[0] < 0 || o.move2[0] > 7 || o.move2[1] < 0 || o.move2[1] > 7) {
+                o.move2 = null;
+            }
+
+
+            if (o.move1 != null) {
+                if (!board[o.move1[0]][o.move1[1]].toString().equals("x")) {
+                    possibleMoves += "" + o.move1[0] + "" + o.move1[1];
+                }
+
+            }
+
+            if (o.move2 != null) {
+                if (!board[o.move2[0]][o.move2[1]].toString().equals("x")) {
+                    possibleMoves += "" + o.move2[0] + "" + o.move2[1];
+                }
+
+
+
+
+            }
+            if(possibleMoves.length() > 0) {
+                System.out.println(possibleMoves);
+            } else {
+                System.out.println("No possible moves for this piece.");
+            }
+            return possibleMoves;
+        }
+
+
+        public String getPossibleXMoves(XPiece x) {
+
+
+            String possibleMoves = "";
+
+
+            if (x.move1[0] < 0 || x.move1[0] > 7 || x.move1[1] < 0 || x.move1[1] > 7) {
+                x.move1 = null;
+            }
+
+            if (x.move2[0] < 0 || x.move2[0] > 7 || x.move2[1] < 0 || x.move2[1] > 7) {
+                x.move2 = null;
+            }
+
+
+            if (x.move1 != null) {
+                if (!board[x.move1[0]][x.move1[1]].toString().equals("o")) {
+                    possibleMoves += "" + x.move1[0] + "" + x.move1[1];
+                }
+
+            }
+
+            if (x.move2 != null) {
+                if (!board[x.move2[0]][x.move2[1]].toString().equals("o")) {
+                    possibleMoves += "" + x.move2[0] + "" + x.move2[1];
+                }
+
+
+
+
+            }
+            if(possibleMoves.length() > 0) {
+                System.out.println(possibleMoves);
+            } else {
+                System.out.println("No possible moves for this piece.");
+            }
+            return possibleMoves;
+        }
         public void displayBoard() {
 
             int vertPosCounter = 0;
@@ -161,20 +286,20 @@ public class CheckersLogic {
             char[] horz = {'a','b','c','d','e','f','g','h'};
 
             for(int i =0; i < 8; i ++) {
-                char y = coordinates.charAt(1);
+                char y = coordinates.charAt(0);
                 if(y == vert[i]) {
                     result += i;
                 }
             }
             for(int i =0; i < 8; i ++) {
-                char x = coordinates.charAt(0);
+                char x = coordinates.charAt(1);
                 if(x == horz[i]) {
                     result += i;
                 }
             }
 
 
-            System.out.println(result.charAt(0) + "," + result.charAt(1));
+            //System.out.println(result.charAt(0) + "," + result.charAt(1));
             return result;
 
         }
