@@ -1,45 +1,51 @@
+/**
+ * Logic for Checkers game (used by CheckersTextConsole.java).
+ *
+ * @author Andronick Martusheff
+ * @version 1.0
+ */
+
+
 package core;
 
-interface piece {
-
-}
 
 public class CheckersLogic {
 
-
     Board testBoard = new Board();
 
-
-
     static class Piece {
-        boolean isFilled = false;
 
-
-        public Piece(boolean isFilled) {
-            this.isFilled = isFilled;
-        }
-
+        /**
+         * @return creates an 'empty' piece.
+         */
         public Piece() {
-
         }
 
+        /**
+         *
+         * @return draws '_' to board to update UI with empty position.
+         */
         public String toString() {
             return "_";
         }
 
     }
 
-
     public static class OPiece extends Piece {
         private final char name = 'o';
+        private final int identifier;
         private int positionY, positionX;
         private int[] move1, move2;
         int[][] possibleMoves;
 
 
+        /**
+         * @param positionY vertical placement
+         * @param positionX horizontal placement
+         */
 
-        private OPiece(int positionY, int positionX, boolean isFilled) {
-            this.isFilled = isFilled;
+        private OPiece(int positionY, int positionX, int identifier) {
+            this.identifier = identifier;
             this.positionY = positionY;
             this.positionX = positionX;
             this.move1 = new int[]{positionY + 1, positionX + 1};
@@ -47,41 +53,10 @@ public class CheckersLogic {
 
         }
 
-
-
-        public String getPossibleMoves(OPiece o) {
-
-            String possibleMoves = "";
-
-            if(o.move1[0] < 0 || o.move1[0] > 7)
-                o.move1 = null;
-
-            if(o.move1[1] < 0 || o.move1[1] > 7)
-                o.move1 = null;
-
-            if(o.move2[0] < 0 || o.move2[0] > 7)
-                o.move2 = null;
-
-            if(o.move2[1] < 0 || o.move2[1] > 7)
-                o.move2 = null;
-
-            if(o.move1 != null) {
-                possibleMoves += "" + o.move1[0] + "" + o.move1[1];
-            }
-
-            if(o.move2 != null) {
-                possibleMoves += "" + o.move2[0] + "" + o.move2[1];
-            }
-            System.out.println(possibleMoves);
-
-            return possibleMoves;
-        }
-
-        public void setPosition(int positionY, int positionX) {
-            this.positionY = positionY;
-            this.positionX = positionX;
-        }
-
+        /**
+         *
+         * @return 'o' to string, displays 'o' on board.
+         */
         public String toString() {
             return "o";
         }
@@ -90,26 +65,29 @@ public class CheckersLogic {
 
     public static class XPiece extends Piece {
         private final char name = 'x';
+        private final int identifier;
         private int positionY, positionX;
         private int[] move1, move2;
 
 
-
-        private XPiece(int positionY, int positionX, boolean isFilled) {
-            this.isFilled = isFilled;
+        /**
+         * @param positionY vertical placement
+         * @param positionX horizontal placement
+         */
+        private XPiece(int positionY, int positionX, int identifier) {
+            this.identifier = identifier;
             this.positionY = positionY;
+
             this.positionX = positionX;
             this.move1 = new int[]{positionY - 1, positionX-1};
             this.move2 = new int[]{positionY - 1, positionX+1};
 
         }
 
-
-        public void setPosition(int positionY, int positionX) {
-            this.positionY = positionY;
-            this.positionX = positionX;
-        }
-
+        /**
+         *
+         * @return 'x' to string, displays 'x' on board.
+         */
         public String toString() {
             return "x";
         }
@@ -118,25 +96,48 @@ public class CheckersLogic {
 
     public static class Board {
         private Piece[][] board = new Piece[8][8];
+        public int[] OPieces = new int[12];
+        public int[] XPieces = new int[12];
 
         public Board() {
             getNewBoard();
         }
 
-        public void moveOPiece(int startX, int startY, int endX, int endY){
+        /**
+         * Move OPiece logic
+         * @param startX starting horizontal position
+         * @param startY starting vertical position
+         * @param endX ending horizontal position
+         * @param endY ending vertical position
+         * @return boolean - successful move
+         */
+        public boolean moveOPiece(int startX, int startY, int endX, int endY){
             OPiece o = (OPiece) board[startX][startY];
             getPossibleOMoves(o);
-            if(movePossible(o, endX, endY) == true) {
+            if(moveOPossible(o, endX, endY)) {
                 System.out.println("Move possible!");
+                board[startX][startY] = new Piece();
+                board[endX][endY] = new OPiece(endX, endY, o.identifier);
+                return true;
             } else {
                 System.out.println("Move blocked.");
+                return false;
             }
-            board[startX][startY] = new Piece();
-            board[endX][endY] = new OPiece(endX, endY, true);
+
 
         }
 
-        public boolean movePossible(OPiece o , int endX, int endY) {
+        /**
+         * Can the OPiece be moved to the requested end position.
+         * @param o OPiece
+         * @param endX horizontal end coordinate
+         * @param endY vertical end coordinate
+         * @return boolean: piece can be moved.
+         */
+        public boolean moveOPossible(OPiece o , int endX, int endY) {
+            if(getPossibleOMoves(o).length() == 0) {
+                return false;
+            }
             if(o.move1 == null && o.move2 == null) {
                 System.out.println("There are no possible moves for this piece.");
                 return false;
@@ -155,48 +156,91 @@ public class CheckersLogic {
 
         }
 
+        /**
+         * Move XPiece logic
+         * @param startX starting horizontal position
+         * @param startY starting vertical position
+         * @param endX ending horizontal position
+         * @param endY ending vertical position
+         * @return boolean - successful move
+         */
         public void moveXPiece(int startX, int startY, int endX, int endY){
             XPiece x = (XPiece) board[startX][startY];
             getPossibleXMoves(x);
             board[startX][startY] = new Piece();
-            board[endX][endY] = new XPiece(endX, endY, true);
+            board[endX][endY] = new XPiece(endX, endY, x.identifier);
         }
 
+        /**
+         * Updates new board for new game start/initialization.
+         */
         private void getNewBoard() {
             for (int i = 0; i < board.length; i++) {
                 for (int j = 0; j < board[i].length; j++) {
                     board[i][j] = new Piece();
                 }
             }
+            int oCounterID = 0;
             for(int i = 0; i < 3; i++) {
                 for(int j = 1; j < board[i].length; j+=2) {
-                    if(i % 2 == 0)
-                        board[i][j] = new OPiece(i,j,true);
-                    if(i == 1)
-                        board[i][j-1] = new OPiece(i,j,true);
+                    if(i % 2 == 0) {
+                        board[i][j] = new OPiece(i, j, oCounterID);
+                        if(oCounterID < 12) {
+                            OPieces[oCounterID] = oCounterID;
+                            oCounterID++;
+                        }
+
+                    }
+                    if(i == 1) {
+                        board[i][j - 1] = new OPiece(i, j, oCounterID++);
+                        if(oCounterID < 12) {
+                            OPieces[oCounterID] = oCounterID;
+                            oCounterID++;
+                        }
+                    }
                 }
             }
+
+            int xCounterID = 0;
             for(int i = board.length - 1; i > 4; i --) {
                 for(int j = 0; j < board[i].length; j+=2){
-                    if(i % 2 == 1)
-                        board[i][j] = new XPiece(i,j,true);
-                    if(i == 6)
-                        board[i][j+1] = new XPiece(i,j,true);
+                    if(i % 2 == 1) {
+                        board[i][j] = new XPiece(i, j,xCounterID);
+                        if(xCounterID < 12) {
+                            XPieces[xCounterID] = xCounterID;
+                            xCounterID++;
+                        }
+                    }
+                    if(i == 6) {
+                        board[i][j + 1] = new XPiece(i, j,xCounterID);
+                        if(xCounterID < 12) {
+                            XPieces[xCounterID] = xCounterID;
+                            xCounterID++;
+                        }
+                    }
                 }
             }
         }
 
+        /**
+         * Returns potential moves for a given OPiece
+         * @param o OPiece
+         * @return possibleMoves - a string consisting of potential coordinates
+         */
         public String getPossibleOMoves(OPiece o) {
 
             String possibleMoves = "";
 
-
-            if (o.move1[0] < 0 || o.move1[0] > 7 || o.move1[1] < 0 || o.move1[1] > 7) {
-                o.move1 = null;
+            if(o.move2 != null) {
+                if (o.move1[0] < 0 || o.move1[0] > 7 || o.move1[1] < 0 || o.move1[1] > 7) {
+                    o.move1 = null;
+                }
             }
 
-            if (o.move2[0] < 0 || o.move2[0] > 7 || o.move2[1] < 0 || o.move2[1] > 7) {
-                o.move2 = null;
+            if(o.move2 != null) {
+                if (o.move2[0] < 0 || o.move2[0] > 7 || o.move2[1] < 0 || o.move2[1] > 7) {
+                    o.move2 = null;
+                }
             }
 
 
@@ -224,7 +268,11 @@ public class CheckersLogic {
             return possibleMoves;
         }
 
-
+        /**
+         * Returns potential moves for a given XPiece
+         * @param x XPiece
+         * @return possibleMoves - a string consisting of potential coordinates
+         */
         public String getPossibleXMoves(XPiece x) {
 
 
@@ -263,6 +311,11 @@ public class CheckersLogic {
             }
             return possibleMoves;
         }
+
+        /**
+         * Displays board to user in Console.
+         * Call only after updating all game movements for a given turn.
+         */
         public void displayBoard() {
 
             int vertPosCounter = 0;
@@ -280,6 +333,12 @@ public class CheckersLogic {
             System.out.println("    a   b   c   d   e   f   g   h");
         }
 
+
+        /**
+         * Converts the number, letter gave UI coordinate combo with numeric indexes
+         * @param coordinates user entered coordinates
+         * @return result respective numeric representation of UI
+         */
         public String convertToUIFriendly(String coordinates) {
             String result = "";
             char[] vert = {'8','7','6','5','4','3','2','1'};
@@ -297,32 +356,9 @@ public class CheckersLogic {
                     result += i;
                 }
             }
-
-
-            //System.out.println(result.charAt(0) + "," + result.charAt(1));
             return result;
 
         }
-
-        public OPiece getOPiece(int y, int x) {
-            OPiece o = (OPiece) board[y][x];
-            return o;
-        }
-
-        public XPiece getXPiece(int y, int x) {
-            XPiece xP = (XPiece) board[y][x];
-            return xP;
-        }
-
-
-
-
-
     }
-
-
-
-
-
 
 }
