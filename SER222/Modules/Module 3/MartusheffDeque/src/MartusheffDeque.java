@@ -123,6 +123,11 @@ public class MartusheffDeque<Item> implements Deque<Item> {
 
     @Override
     public Item dequeueFront() throws NoSuchElementException {
+
+        if(head == null) {
+            throw new NoSuchElementException("Deque head is empty!");
+        }
+
         Item data = (Item) head.item;
         head = head.next;
         head.prev = null;
@@ -132,6 +137,11 @@ public class MartusheffDeque<Item> implements Deque<Item> {
 
     @Override
     public Item dequeueBack() throws NoSuchElementException {
+
+        if(tail == null) {
+            throw new NoSuchElementException("Deque tail is empty!");
+        }
+
         Item data = (Item) tail.item;
         tail = tail.prev;
         tail.next = null;
@@ -141,30 +151,23 @@ public class MartusheffDeque<Item> implements Deque<Item> {
 
     @Override
     public Item first() throws NoSuchElementException {
+        if(head == null) {
+            throw new NoSuchElementException("Deque head is empty!");
+        }
         return (Item) head.item;
     }
 
     @Override
     public Item last() throws NoSuchElementException {
+        if(tail == null) {
+            throw new NoSuchElementException("Deque tail is empty!");
+        }
         return (Item) tail.item;
     }
 
     @Override
     public boolean isEmpty() {
         return(size == 0);
-    }
-
-    public void printNodes() {
-        Node current = head;
-        if(head == null) {
-            System.out.println("Double linked list is empty.");
-            return;
-        }
-        System.out.println("Nodes of doubly linked list: ");
-        while(current != null) {
-            System.out.println(current.item + " ");
-            current = current.next;
-        }
     }
 
 
