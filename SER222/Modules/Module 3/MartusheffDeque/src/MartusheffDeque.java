@@ -2,8 +2,8 @@
  * This program provides an implementation of the Deque interface
  * and demonstrates it.
  *
- * @author (your name), Acuna
- * @version (version)
+ * @author Martusheff, Acuna
+ * @version 09.03.2021
  */
 import java.util.NoSuchElementException;
 
