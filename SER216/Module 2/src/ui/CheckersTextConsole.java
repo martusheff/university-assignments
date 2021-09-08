@@ -58,7 +58,7 @@ public class CheckersTextConsole extends CheckersLogic {
                     //OPiece o = board.getOPiece(startY,startX);
 
 
-                    if(board.moveOPiece(startX, startY, endX, endY) == true) {
+                    if(board.moveOPiece(startX, startY, endX, endY)) {
                         oValid = false;
                     } else {
                         System.out.println("Sorry, that was an invalid move.");
@@ -72,33 +72,50 @@ public class CheckersTextConsole extends CheckersLogic {
             }
 
             while(turnX) {
-                String response;
+
                 System.out.println("Player X - your turn.");
-                System.out.println();
-                response = scan.nextLine();
-                String[] parts = response.split("-");
-
-                String getCoordinates = board.convertToUIFriendly(parts[0]);
-
-                int startX = getCoordinates.charAt(0) - '0';
+                boolean xValid = true;
+                while(xValid) {
 
 
-                int startY = getCoordinates.charAt(1) - '0';
+                    String response;
+                    System.out.println();
+                    response = scan.nextLine();
+                    String[] parts = response.split("-");
 
-                String setCoordinates = board.convertToUIFriendly(parts[1]);
-                int endX = setCoordinates.charAt(0) - '0';
-                int endY = setCoordinates.charAt(1) - '0';
+                    String getCoordinates = board.convertToUIFriendly(parts[0]);
 
-                //XPiece x = board.getXPiece(startX,startY);
+                    int startX = getCoordinates.charAt(0) - '0';
 
 
+                    int startY = getCoordinates.charAt(1) - '0';
 
-                board.moveXPiece(startX,startY, endX, endY);
-                //x.getPossibleMoves();
+                    String setCoordinates = board.convertToUIFriendly(parts[1]);
+                    int endX = setCoordinates.charAt(0) - '0';
+                    int endY = setCoordinates.charAt(1) - '0';
 
+
+
+
+                    if(board.moveXPiece(startX, startY, endX, endY)) {
+                        xValid = false;
+                    } else {
+                        System.out.println("Sorry, that was an invalid move.");
+                    }
+
+                }
                 board.displayBoard();
                 turnX = false;
                 turnO = true;
+            }
+
+            if(board.isGameOver(board.OPieces)) {
+                gameOn = false;
+                System.out.println("Game is over. X wins!");
+            }
+            if(board.isGameOver(board.XPieces)) {
+                gameOn = false;
+                System.out.println("Game is over. O wins!");
             }
         }
 

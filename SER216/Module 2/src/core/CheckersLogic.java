@@ -156,6 +156,28 @@ public class CheckersLogic {
 
         }
 
+        public boolean moveXPossible(XPiece x , int endX, int endY) {
+            if(getPossibleXMoves(x).length() == 0) {
+                return false;
+            }
+            if(x.move1 == null && x.move2 == null) {
+                System.out.println("There are no possible moves for this piece.");
+                return false;
+            }
+            if(x.move1 != null) {
+                if (x.move1[0] == endX && x.move1[1] == endY) {
+                    return true;
+                }
+            }
+            if(x.move2 != null) {
+                if (x.move2[0] == endX && x.move2[1] == endY) {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
         /**
          * Move XPiece logic
          * @param startX starting horizontal position
@@ -164,11 +186,17 @@ public class CheckersLogic {
          * @param endY ending vertical position
          * @return boolean - successful move
          */
-        public void moveXPiece(int startX, int startY, int endX, int endY){
+        public boolean moveXPiece(int startX, int startY, int endX, int endY){
             XPiece x = (XPiece) board[startX][startY];
             getPossibleXMoves(x);
-            board[startX][startY] = new Piece();
-            board[endX][endY] = new XPiece(endX, endY, x.identifier);
+            if(moveXPossible(x, endX, endY)) {
+                board[startX][startY] = new Piece();
+                board[endX][endY] = new XPiece(endX, endY, x.identifier);
+                return true;
+            } else {
+                System.out.println("Move blocked.");
+                return false;
+            }
         }
 
         /**
@@ -223,6 +251,22 @@ public class CheckersLogic {
         }
 
         /**
+         * Game logic for deciding victor of game.
+         * @param pieces once a piece is skipped over, its ID is set to -1. If no ID's have a value of > 0,
+         *               or a piece type (o/x) no longer has any possible moves (see possibleMoves), the game over
+         *               flag is thrown, indicating the game is now over.
+         * @return over : boolean deciding whether the game is over or not
+         */
+        public boolean isGameOver(int[] pieces) {
+            boolean over = true;
+            for(int i = 0; i < pieces.length; i++) {
+                if(pieces[i] != -1) {
+                    over = false;
+                }
+            }
+            return over;
+        }
+        /**
          * Returns potential moves for a given OPiece
          * @param o OPiece
          * @return possibleMoves - a string consisting of potential coordinates
@@ -231,7 +275,7 @@ public class CheckersLogic {
 
             String possibleMoves = "";
 
-            if(o.move2 != null) {
+            if(o.move1 != null) {
                 if (o.move1[0] < 0 || o.move1[0] > 7 || o.move1[1] < 0 || o.move1[1] > 7) {
                     o.move1 = null;
                 }
@@ -278,13 +322,16 @@ public class CheckersLogic {
 
             String possibleMoves = "";
 
-
-            if (x.move1[0] < 0 || x.move1[0] > 7 || x.move1[1] < 0 || x.move1[1] > 7) {
-                x.move1 = null;
+            if(x.move1 != null) {
+                if (x.move1[0] < 0 || x.move1[0] > 7 || x.move1[1] < 0 || x.move1[1] > 7) {
+                    x.move1 = null;
+                }
             }
 
-            if (x.move2[0] < 0 || x.move2[0] > 7 || x.move2[1] < 0 || x.move2[1] > 7) {
-                x.move2 = null;
+            if(x.move2 != null) {
+                if (x.move2[0] < 0 || x.move2[0] > 7 || x.move2[1] < 0 || x.move2[1] > 7) {
+                    x.move2 = null;
+                }
             }
 
 
