@@ -40,8 +40,8 @@ public class CheckersTextConsole extends CheckersLogic {
                 "Here's your new game board. Have fun!\n");
 
         boolean gameOn = true;
-        boolean turnO = true;
-        boolean turnX = false;
+        boolean turnO = false;
+        boolean turnX = true;
         Scanner scan = new Scanner(System.in);
         Board board = new Board();
         board.displayBoard();
@@ -79,12 +79,15 @@ public class CheckersTextConsole extends CheckersLogic {
                     int endX = setCoordinates.charAt(0) - '0';
                     int endY = setCoordinates.charAt(1) - '0';
                     //OPiece o = board.getOPiece(startY,startX);
-
-
-                    if(board.moveOPiece(startX, startY, endX, endY)) {
-                        oValid = false;
-                    } else {
-                        System.out.println("Sorry, that was an invalid move.");
+                    try {
+                        if (board.moveOPiece(startX, startY, endX, endY)) {
+                            oValid = false;
+                        } else {
+                            System.out.println("Sorry, that was an invalid move.");
+                        }
+                    } catch (Error e) {
+                        e.printStackTrace();
+                        System.out.println("Unable to move OPiece error.");
                     }
 
 
@@ -119,11 +122,15 @@ public class CheckersTextConsole extends CheckersLogic {
 
 
 
-
-                    if(board.moveXPiece(startX, startY, endX, endY)) {
-                        xValid = false;
-                    } else {
-                        System.out.println("Sorry, that was an invalid move.");
+                    try {
+                        if (board.moveXPiece(startX, startY, endX, endY)) {
+                            xValid = false;
+                        } else {
+                            System.out.println("Sorry, that was an invalid move.");
+                        }
+                    } catch (Error e) {
+                        e.printStackTrace();
+                        System.out.println("Unable to move XPiece error. Reference error.");
                     }
 
                 }

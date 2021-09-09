@@ -1,3 +1,10 @@
+/**
+ * Logic for Checkers computer player.
+ *
+ * @author Andronick Martusheff
+ * @version 1.1
+ */
+
 package core;
 
 import java.util.Scanner;
@@ -57,10 +64,15 @@ public class CheckersComputerPlayer {
                     int endX = setCoordinates.charAt(0) - '0';
                     int endY = setCoordinates.charAt(1) - '0';
 
-                    if (board.moveXPiece(startX, startY, endX, endY)) {
-                        pValid = false;
-                    } else {
-                        System.out.println("Sorry, that was an invalid move.");
+                    try {
+                        if (board.moveXPiece(startX, startY, endX, endY)) {
+                            pValid = false;
+                        } else {
+                            System.out.println("Sorry, that was an invalid move.");
+                        }
+                    } catch (Error e) {
+                        e.printStackTrace();
+                        System.out.println("Player HUMAN was unable to move their XPiece.");
                     }
                     board.displayBoard();
                     turnP = false;
@@ -79,8 +91,12 @@ public class CheckersComputerPlayer {
                 int moveXpos = moves.charAt(0) - '0';
                 int moveYpos = moves.charAt(1) - '0';
 
-
-                board.moveOXPiece(o.positionX, o.positionY, o);
+                try {
+                    board.moveOXPiece(o.positionX, o.positionY, o);
+                } catch (Error e) {
+                    e.printStackTrace();
+                    System.out.println("Computer was unable to make a move. You win.");
+                }
 
 
                 System.out.println("Computer moved.");
