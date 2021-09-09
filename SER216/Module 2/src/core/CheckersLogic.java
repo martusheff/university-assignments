@@ -9,11 +9,9 @@
 package core;
 
 
-import java.util.Objects;
+
 
 public class CheckersLogic {
-
-    Board testBoard = new Board();
 
     static class Piece {
 
@@ -96,6 +94,9 @@ public class CheckersLogic {
 
     }
 
+    /**
+     * Board constructor.
+     */
     public static class Board {
         private Piece[][] board = new Piece[8][8];
         public int[] OPieces = new int[12];
@@ -128,16 +129,27 @@ public class CheckersLogic {
 
 
         }
-        public boolean moveOXPiece(int startX, int startY, int endX, int endY, OPiece ox) {
+
+        /**
+         * Helper method for moving CPU piece.
+         * @param startX start point X
+         * @param startY start point Y
+         * @param ox OPiece to be moved
+         * @return boolean determining success of operation
+         */
+        public boolean moveOXPiece(int startX, int startY, OPiece ox) {
             XPiece o = (XPiece) board[startX][startY];
             getPossibleXMoves(o);
             getPossibleOMoves(ox);
-            if (moveXPossible(o, endX, endY)) {
-                System.out.println("Move possible!");
-                board[startX][startY] = new Piece();
-                board[endX][endY] = new OPiece(endX, endY, o.identifier);
-                return true;
-            } else if(moveOPossible(ox,endX,endY)) {
+
+            String moves = getPossibleOMoves(ox);
+            int endX = moves.charAt(0) - '0';
+            int endY = moves.charAt(1) - '0';
+            String initialVals = getNextOPiece();
+            startX = (int) initialVals.charAt(0) - '0';
+            startY = (int) initialVals.charAt(1) - '0';
+
+            if(moveOPossible(ox,endX,endY)) {
                 System.out.println("Move possible!");
                 board[startX][startY] = new Piece();
                 board[endX][endY] = new OPiece(endX, endY, o.identifier);
@@ -180,6 +192,13 @@ public class CheckersLogic {
 
         }
 
+        /**
+         * Determines whether or not moving X-Piece is possible.
+         * @param x XPiece in question.
+         * @param endX end x (vertical) location.
+         * @param endY end y (horizontal) location.
+         * @return boolean determining success of operation.
+         */
         public boolean moveXPossible(XPiece x , int endX, int endY) {
             if(getPossibleXMoves(x).length() == 0) {
                 return false;
@@ -329,7 +348,6 @@ public class CheckersLogic {
 
             }
             if(possibleMoves.length() > 0) {
-                System.out.println("Your possible moves included " + possibleMoves);
             } else {
                 System.out.println("No possible moves for this piece.");
             }
@@ -337,7 +355,10 @@ public class CheckersLogic {
         }
 
 
-
+        /**
+         * Get next OPiece for Computer to play against.
+         * @return nextPiece the string location of the next OPiece.
+         */
         public String getNextOPiece() {
             String nextPiece = "";
 
@@ -362,6 +383,11 @@ public class CheckersLogic {
             return nextPiece;
         }
 
+        /**
+         *
+         * @param nextPiece returns CPU o Piece at a given index.
+         * @return OPiece
+         */
         public OPiece returnOPiece(String nextPiece) {
 
             return (OPiece) board[(int) nextPiece.charAt(0) - '0'][(int) nextPiece.charAt(1)- '0'];
@@ -407,7 +433,7 @@ public class CheckersLogic {
 
             }
             if(possibleMoves.length() > 0) {
-                System.out.println("Your possible moves included: " + possibleMoves);
+
             } else {
                 System.out.println("No possible moves for this piece.");
             }
