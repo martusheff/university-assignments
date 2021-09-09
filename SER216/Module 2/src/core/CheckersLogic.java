@@ -9,6 +9,8 @@
 package core;
 
 
+import java.util.Objects;
+
 public class CheckersLogic {
 
     Board testBoard = new Board();
@@ -34,7 +36,7 @@ public class CheckersLogic {
     public static class OPiece extends Piece {
         private final char name = 'o';
         private final int identifier;
-        private int positionY, positionX;
+        public int positionY, positionX;
         private int[] move1, move2;
         int[][] possibleMoves;
 
@@ -44,7 +46,7 @@ public class CheckersLogic {
          * @param positionX horizontal placement
          */
 
-        private OPiece(int positionY, int positionX, int identifier) {
+        public OPiece(int positionY, int positionX, int identifier) {
             this.identifier = identifier;
             this.positionY = positionY;
             this.positionX = positionX;
@@ -126,6 +128,28 @@ public class CheckersLogic {
 
 
         }
+        public boolean moveOXPiece(int startX, int startY, int endX, int endY, OPiece ox) {
+            XPiece o = (XPiece) board[startX][startY];
+            getPossibleXMoves(o);
+            getPossibleOMoves(ox);
+            if (moveXPossible(o, endX, endY)) {
+                System.out.println("Move possible!");
+                board[startX][startY] = new Piece();
+                board[endX][endY] = new OPiece(endX, endY, o.identifier);
+                return true;
+            } else if(moveOPossible(ox,endX,endY)) {
+                System.out.println("Move possible!");
+                board[startX][startY] = new Piece();
+                board[endX][endY] = new OPiece(endX, endY, o.identifier);
+                return true;
+        }else {
+                System.out.println("Move blocked.");
+                return false;
+            }
+
+
+        }
+
 
         /**
          * Can the OPiece be moved to the requested end position.
@@ -305,11 +329,42 @@ public class CheckersLogic {
 
             }
             if(possibleMoves.length() > 0) {
-                System.out.println(possibleMoves);
+                System.out.println("Your possible moves included " + possibleMoves);
             } else {
                 System.out.println("No possible moves for this piece.");
             }
             return possibleMoves;
+        }
+
+
+
+        public String getNextOPiece() {
+            String nextPiece = "";
+
+            for (int i = board.length - 1; i >= 0; i--) {
+                for (int j = board[i].length - 1; j >= 0; j--) {
+
+                    if (board[i][j].toString().equals("o")) {
+                        OPiece piece = (OPiece) board[i][j];
+                        String potentialMoves = getPossibleOMoves(piece);
+
+                        if (potentialMoves.length() > 0) {
+                            nextPiece += i;
+                            nextPiece += j;
+
+                            return nextPiece;
+                        }
+                    }
+                }
+
+
+            }
+            return nextPiece;
+        }
+
+        public OPiece returnOPiece(String nextPiece) {
+
+            return (OPiece) board[(int) nextPiece.charAt(0) - '0'][(int) nextPiece.charAt(1)- '0'];
         }
 
         /**
@@ -352,7 +407,7 @@ public class CheckersLogic {
 
             }
             if(possibleMoves.length() > 0) {
-                System.out.println(possibleMoves);
+                System.out.println("Your possible moves included: " + possibleMoves);
             } else {
                 System.out.println("No possible moves for this piece.");
             }
